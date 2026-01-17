@@ -5,9 +5,25 @@ import { createStudyTimetable } from '@/ai/flows/automatic-study-timetable';
 import { calculateStudyConsistencyScore } from '@/ai/flows/data-analytics-study-consistency-score';
 import { revalidatePath } from 'next/cache';
 
+// Simple in-memory store for college data. In a production app, use a database.
+let collegeData: string | null = null;
+
+export async function uploadCollegeData(data: string) {
+  try {
+    collegeData = data;
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: 'Failed to store college data.' };
+  }
+}
+
 export async function handleChatMessage(message: string) {
   try {
-    const response = await academicSupportChatbot({ query: message });
+    const response = await academicSupportChatbot({
+      query: message,
+      collegeData: collegeData ?? undefined,
+    });
     return { success: true, response: response.response };
   } catch (error) {
     console.error(error);
