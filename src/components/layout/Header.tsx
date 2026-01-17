@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import {
   Bell,
   ChevronDown,
   LogOut,
-  PanelLeft,
   Settings,
   User,
 } from "lucide-react";
@@ -78,11 +76,9 @@ export function Header() {
             <Button variant="ghost" className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
                 {userAvatar && (
-                  <Image
+                  <AvatarImage
                     src={userAvatar.imageUrl}
                     alt={userAvatar.description}
-                    width={40}
-                    height={40}
                     data-ai-hint={userAvatar.imageHint}
                   />
                 )}

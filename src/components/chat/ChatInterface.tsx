@@ -14,7 +14,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ChatMessage } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const chatSchema = z.object({
@@ -26,7 +25,7 @@ const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 export function ChatInterface() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<z.infer<typeof chatSchema>>({
     resolver: zodResolver(chatSchema),
@@ -64,15 +63,13 @@ export function ChatInterface() {
   };
   
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
 
   return (
     <div className="flex h-full flex-col rounded-xl border bg-card">
-      <ScrollArea className="flex-1" ref={scrollAreaRef}>
+      <ScrollArea className="flex-1">
         <div className="p-6 space-y-6">
             <AnimatePresence>
                 {messages.length === 0 && (
@@ -116,7 +113,7 @@ export function ChatInterface() {
                     </div>
                     {message.role === 'user' && (
                      <Avatar className="h-8 w-8 border">
-                        {userAvatar && <Image src={userAvatar.imageUrl} alt={userAvatar.description} width={32} height={32} data-ai-hint={userAvatar.imageHint}/>}
+                        {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} data-ai-hint={userAvatar.imageHint}/>}
                         <AvatarFallback>
                             <User className="h-5 w-5" />
                         </AvatarFallback>
@@ -139,6 +136,7 @@ export function ChatInterface() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
       <div className="border-t p-4">
