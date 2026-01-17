@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { BookOpenCheck } from 'lucide-react';
-import { LoginForm } from '@/components/auth/LoginForm';
+import { SignupForm } from '@/components/auth/SignupForm';
 import { Button } from '@/components/ui/button';
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,17 +13,17 @@ export default function LoginPage() {
             <span className="font-headline text-2xl font-bold">CampusAI</span>
           </Link>
           <Button asChild variant="ghost">
-            <Link href="/signup">Sign Up</Link>
+            <Link href="/">Sign In</Link>
           </Button>
         </div>
       </header>
       <main className="flex flex-1 items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center">
-            <h1 className="font-headline text-4xl font-bold tracking-tighter">Welcome Back</h1>
-            <p className="mt-2 text-muted-foreground">Sign in to access your dashboard</p>
+            <h1 className="font-headline text-4xl font-bold tracking-tighter">Create an Account</h1>
+            <p className="mt-2 text-muted-foreground">Join CampusAI to supercharge your studies</p>
           </div>
-          <LoginForm />
+          <SignupForm />
         </div>
       </main>
     </div>
