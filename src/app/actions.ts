@@ -4,17 +4,36 @@ import { academicSupportChatbot } from '@/ai/flows/ai-chatbot-academic-support';
 import { createStudyTimetable } from '@/ai/flows/automatic-study-timetable';
 import { calculateStudyConsistencyScore } from '@/ai/flows/data-analytics-study-consistency-score';
 import { revalidatePath } from 'next/cache';
+import pdf from 'pdf-parse';
 
 // Simple in-memory store for college data. In a production app, use a database.
 let collegeData: string | null = null;
 
-export async function uploadCollegeData(data: string) {
+export async function uploadCollegeData(formData: FormData) {
   try {
-    collegeData = data;
+    const file = formData.get('file') as File | null;
+    if (!file) {
+      return { success: false, error: 'No file uploaded.' };
+    }
+
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    let textContent = '';
+
+    if (file.type === 'application/pdf') {
+      const data = await pdf(fileBuffer);
+      textContent = data.text;
+    } else if (file.type === 'text/plain' || file.type === 'text/csv') {
+      textContent = fileBuffer.toString('utf-8');
+    } else {
+      return { success: false, error: 'Unsupported file type. Please upload a PDF, TXT, or CSV file.' };
+    }
+
+    collegeData = textContent;
     return { success: true };
   } catch (error) {
     console.error(error);
-    return { success: false, error: 'Failed to store college data.' };
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, error: `Failed to parse or store college data: ${errorMessage}` };
   }
 }
 

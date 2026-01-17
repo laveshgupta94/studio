@@ -30,31 +30,26 @@ export default function AdminPage() {
     }
 
     setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const content = e.target?.result as string;
-      const result = await uploadCollegeData(content);
+    const result = await uploadCollegeData(formData);
 
-      setIsUploading(false);
+    setIsUploading(false);
 
-      if (result.success) {
-        toast({
-          title: 'Upload successful',
-          description: 'The college data has been updated for the AI chatbot.',
-        });
-        setFile(null);
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Upload failed',
-          description: result.error || 'An unexpected error occurred.',
-        });
-      }
-    };
-    // For simplicity, we're reading all file types as text.
-    // In a real application, you might handle PDFs and other formats differently on the server.
-    reader.readAsText(file);
+    if (result.success) {
+      toast({
+        title: 'Upload successful',
+        description: 'The college data has been updated for the AI chatbot.',
+      });
+      setFile(null);
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Upload failed',
+        description: result.error || 'An unexpected error occurred.',
+      });
+    }
   };
 
   return (
@@ -66,14 +61,14 @@ export default function AdminPage() {
         <Card>
           <CardHeader>
             <CardTitle>Upload College Data</CardTitle>
-            <CardDescription>Upload a text-based file (CSV or TXT) containing information for the chatbot. PDF parsing is not supported in this example.</CardDescription>
+            <CardDescription>Upload a file (PDF, CSV, or TXT) containing information for the chatbot.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-12 text-center">
               <UploadCloud className="h-12 w-12 text-muted-foreground" />
               <p className="mt-4 font-medium text-muted-foreground">Drag & drop files here or click to browse</p>
-              <p className="text-xs text-muted-foreground mt-1">Supported formats: CSV, TXT</p>
-              <Input type="file" className="sr-only" id="file-upload" onChange={handleFileChange} accept=".csv,.txt" />
+              <p className="text-xs text-muted-foreground mt-1">Supported formats: PDF, CSV, TXT</p>
+              <Input type="file" className="sr-only" id="file-upload" onChange={handleFileChange} accept=".pdf,.csv,.txt" />
               <Button asChild variant="outline" className="mt-4">
                 <label htmlFor="file-upload">Browse Files</label>
               </Button>
