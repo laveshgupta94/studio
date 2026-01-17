@@ -60,7 +60,7 @@ export function SidebarNav() {
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/" legacyBehavior passHref>
-              <SidebarMenuButton className="w-full justify-start">
+              <SidebarMenuButton className="w-full justify-start" asChild>
                 <a>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log Out</span>
